@@ -27,6 +27,15 @@ const PharmacyScreen = ({navigation}) => {
       }
     });
   }
+  const deletePharmacy = (id) => {
+    pharmacyAsync.DeleteMed({product_id: id}).then(async (resp) => {
+      const result = resp;
+      if (result.messageCode == '1') {
+        setProductList(null);
+        fetchData();
+      }
+    });
+  };
   const renderItem = ({item}) => (
     <Card style={{marginBottom: 10}}>
       <TouchableOpacity
@@ -67,14 +76,21 @@ const PharmacyScreen = ({navigation}) => {
           style={{flexDirection: 'row', marginHorizontal: 5}}
           mode="contained"
           onPress={() =>
-            Alert.alert('Delete', 'Do you really want to delete?', [
-              {
-                text: 'Yes',
-              },
-              {
-                text: 'No',
-              },
-            ])
+            Alert.alert(
+              'Delete',
+              'Do you really want to delete [' + item.medicine_name + '] ?',
+              [
+                {
+                  text: 'Yes',
+                  onPress: () => {
+                    deletePharmacy(item.id);
+                  },
+                },
+                {
+                  text: 'No',
+                },
+              ],
+            )
           }>
           <Icon name="trash" size={20} color="black" />
           <Text style={{marginHorizontal: 5}}>Delete</Text>

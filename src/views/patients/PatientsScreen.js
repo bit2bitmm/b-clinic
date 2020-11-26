@@ -32,6 +32,15 @@ const PatientsScreen = ({navigation}) => {
       }
     });
   }
+  const deletePatient = (id) => {
+    patientsAsync.deletePatients({patient_id: id}).then(async (resp) => {
+      const result = resp;
+      if (result.messageCode == '1') {
+        setData({patients: null});
+        fetchData();
+      }
+    });
+  };
   const renderItem = ({item}) => (
     <Card style={{marginBottom: 10}}>
       <TouchableOpacity
@@ -71,7 +80,8 @@ const PatientsScreen = ({navigation}) => {
       <Card.Actions style={{alignSelf: 'flex-end'}}>
         <TouchableOpacity
           style={{flexDirection: 'row', marginHorizontal: 5}}
-          mode="contained">
+          mode="contained"
+          onPress={() => navigation.navigate('UpdatePatient', {item})}>
           <Icon name="brush" size={20} color="black" />
           <Text style={{marginHorizontal: 5}}>Edit</Text>
         </TouchableOpacity>
@@ -85,7 +95,9 @@ const PatientsScreen = ({navigation}) => {
               [
                 {
                   text: 'Yes',
-                  onPress: () => {},
+                  onPress: () => {
+                    deletePatient(item.id);
+                  },
                 },
                 {
                   text: 'No',

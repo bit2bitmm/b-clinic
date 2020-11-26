@@ -50,7 +50,13 @@ export const CustomDrawerComp = (props) => {
             label={'Dashboard'}
             labelStyle={{color: '#000', fontSize: 18}}
             style={{width: 500}}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Home'}],
+              });
+              props.navigation.closeDrawer();
+            }}
           />
         </View>
 

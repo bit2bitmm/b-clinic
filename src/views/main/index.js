@@ -8,6 +8,7 @@ import PharmacyScreen from '../pharmacy/PharmacyScreen';
 import PatientsScreen from '../patients/PatientsScreen';
 import PatientsRegisterScreen from '../patients/PatientsRegisterScreen';
 import PharmacyRegisterScreen from '../pharmacy/PharmacyRegistrationScreen';
+import PatientsUpdateScreen from '../patients/PatientsUpdateScreen';
 const Stack = createStackNavigator();
 const NavigationDrawerStructure = (props) => {
   const toggleDrawer = () => {
@@ -75,7 +76,6 @@ function App({navigation}) {
           headerShown: true,
         }}
       />
-
       <Stack.Screen
         name="Setting"
         component={SettingScreen}
@@ -105,6 +105,15 @@ function App({navigation}) {
         component={PatientsRegisterScreen}
         options={{
           headerTitle: 'New Patient',
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="UpdatePatient"
+        component={PatientsUpdateScreen}
+        options={{
+          headerTitle: 'Update Patient',
           headerTitleAlign: 'center',
           headerShown: true,
         }}
