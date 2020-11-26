@@ -12,6 +12,8 @@ target 'bit2bitclinic' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-biometrics', :path => '../node_modules/react-native-biometrics'
+
   target 'bit2bitclinicTests' do
     inherit! :complete
     # Pods for testing

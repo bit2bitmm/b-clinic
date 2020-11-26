@@ -131,34 +131,23 @@ const PatientsRegisterScreen = ({navigation}) => {
         .then(async (resp) => {
           const result = resp;
           if (result.messageCode == '1') {
-            Alert.alert(
-              'Register Successfully!',
-              'Do you want to register another medicine?',
-              [
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 1,
-                        routes: [
-                          {
-                            name: 'AddPharmacy',
-                          },
-                        ],
-                      }),
-                    );
-                    scrollRef.current.scrollTo({x: 0, y: 0, animated: true});
-                  },
+            Alert.alert('', 'Registered Successfully!', [
+              {
+                text: 'Ok',
+                onPress: () => {
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [
+                        {
+                          name: '',
+                        },
+                      ],
+                    }),
+                  );
                 },
-                {
-                  text: 'No',
-                  onPress: () => {
-                    navigation.navigate('Pharmacy');
-                  },
-                },
-              ],
-            );
+              },
+            ]);
           } else {
             Alert.alert('Register falied. Try again!');
           }

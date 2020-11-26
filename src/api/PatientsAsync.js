@@ -29,6 +29,26 @@ class PatientsAsync extends Component {
       Alert.alert(JSON.stringify(error));
     }
   }
+  async RegisterPatient(params) {
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Accept: 'application/json',
+        },
+        method: 'POST',
+      };
+      options.body = new FormData();
+      for (let key in params) {
+        options.body.append(key, params[key]);
+      }
+      const response = await fetch(Global.url + '/Patients/create', options);
+      return response.json();
+    } catch (error) {
+      Alert.alert(JSON.stringify(error));
+    }
+  }
+
   async deletePatients(params) {
     try {
       let options = {

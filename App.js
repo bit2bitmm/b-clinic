@@ -62,7 +62,7 @@ const App = () => {
       },
       signOut: async () => {
         try {
-          await AsyncStorage.removeItem('data');
+          // await AsyncStorage.removeItem('data');
           dispatch({type: 'LOGOUT', id: null, name: null});
         } catch (e) {
           Alert.alert(e);

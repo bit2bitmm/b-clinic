@@ -2,12 +2,12 @@ import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, TextInput, StyleSheet, Alert, LogBox} from 'react-native';
 import {RadioButton, Button} from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
-import {add} from 'react-native-reanimated';
+import patientAsync from '../../api/PatientsAsync';
+
 const PatientsRegisterScreen = ({navigation}) => {
   const [data, setData] = useState({
     name: '',
-    gender: 0,
-    age: '',
+    gender: 1,
     address: '',
     year: '',
     month: '',
@@ -47,11 +47,44 @@ const PatientsRegisterScreen = ({navigation}) => {
   const register = () => {
     var namereq = '';
     var addreq = '';
+    var namestatus = true;
+    var addressStatus = true;
     if (data.name == '') {
       namereq = 'Name is required.';
+      namestatus = false;
     }
     if (data.address == '') {
       addreq = 'Address is required.';
+      addressStatus = false;
+    }
+    if (namestatus && addressStatus) {
+      patientAsync
+        .RegisterPatient({
+          name: data.name,
+          gender: data.gender,
+          year: data.year,
+          month: data.month,
+          day: data.day,
+          address: data.address,
+        })
+        .then(async (resp) => {
+          const result = resp;
+          if (result.messageCode == '1') {
+            Alert.alert('Registered Successfully!', '', [
+              {
+                text: 'Ok',
+                onPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Patients'}],
+                  });
+                },
+              },
+            ]);
+          } else {
+            Alert.alert('Register falied. Try again!');
+          }
+        });
     }
     setVal({
       nameReq: namereq,
@@ -77,15 +110,15 @@ const PatientsRegisterScreen = ({navigation}) => {
         <Text>Gender:</Text>
         <View style={{flexDirection: 'row'}}>
           <RadioButton
-            value="Male"
-            status={data.gender === 0 ? 'checked' : 'unchecked'}
-            onPress={() => setData({...data, gender: 0})}
+            value={1}
+            status={data.gender === 1 ? 'checked' : 'unchecked'}
+            onPress={() => setData({...data, gender: 1})}
           />
           <Text style={{marginTop: 7, marginRight: 10}}>Male</Text>
           <RadioButton
-            value="Female"
-            status={data.gender === 1 ? 'checked' : 'unchecked'}
-            onPress={() => setData({...data, gender: 1})}
+            value={2}
+            status={data.gender === 2 ? 'checked' : 'unchecked'}
+            onPress={() => setData({...data, gender: 2})}
           />
           <Text style={{marginTop: 7}}>Female</Text>
         </View>

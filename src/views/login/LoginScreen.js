@@ -1,19 +1,18 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
-  Animated,
   Image,
   View,
   ActivityIndicator,
-  Alert,
-  KeyboardAvoidingView,
-  TouchableHighlight,
   Keyboard,
+  Alert,
 } from 'react-native';
 import {AuthContext} from '../../components/Context';
 import {Text, TextInput, Button} from 'react-native-paper';
 import {ScrollView} from 'react-native-gesture-handler';
 import loginAsync from '../../api/LoginAsync';
+import ReactNativeBiometrics from 'react-native-biometrics';
+import AsyncStorage from '@react-native-community/async-storage';
 const LoginScreen = ({navigation}) => {
   const [data, setData] = useState({
     email: '',
@@ -22,6 +21,39 @@ const LoginScreen = ({navigation}) => {
   const [emailreq, setEmailreq] = useState('');
   const [passReq, setPassReq] = useState('');
   const {signIn} = React.useContext(AuthContext);
+  const [spinner, setSpinner] = useState(false);
+
+  useEffect(() => {
+    CheckBioMetric();
+  }, []);
+
+  async function CheckBioMetric() {
+    const {biometryType} = await ReactNativeBiometrics.isSensorAvailable();
+    if (
+      biometryType === ReactNativeBiometrics.Biometrics ||
+      biometryType === ReactNativeBiometrics.TouchID ||
+      biometryType === ReactNativeBiometrics.FaceID
+    ) {
+      ReactNativeBiometrics.biometricKeysExist().then(async (resultObject) => {
+        const {keysExist} = resultObject;
+        if (keysExist) {
+          ReactNativeBiometrics.simplePrompt({
+            promptMessage: 'Touch ID Confirmation',
+          }).then(async (resultObject) => {
+            const {success} = resultObject;
+            if (success) {
+              const userData = await AsyncStorage.getItem('data');
+              const user = JSON.parse(userData);
+              LoginHandler(user.email, user.password);
+            } else {
+              // Alert.alert('Authentication failed, Please login first.');
+            }
+          });
+        }
+      });
+    }
+  }
+
   const userChange = (val) => {
     setData({
       ...data,
@@ -38,25 +70,30 @@ const LoginScreen = ({navigation}) => {
   };
   const LoginHandler = async (email, password) => {
     //const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    var emailStatus = true;
+    var passwordStatus = true;
     if (email.length == 0) {
       setEmailreq('Email is required.');
-    } else {
-      setEmailreq('');
-
+      emailStatus = false;
+    }
+    if (password.length == 0) {
+      setPassReq('Password is required.');
+      passwordStatus = false;
+    }
+    if (emailStatus && passwordStatus) {
+      setSpinner(true);
       loginAsync
         .Login({email: email, password: password})
         .then(async (resp) => {
           const result = resp;
           if (result.messageCode == '1') {
+            result.data.password = password;
             signIn(result.data);
           } else {
+            setSpinner(false);
             setPassReq('Login falied. Try again!');
           }
         });
-    }
-
-    if (password.length == 0) {
-      setPassReq('Password is required.');
     }
   };
 
@@ -131,6 +168,11 @@ const LoginScreen = ({navigation}) => {
         {' '}
         {'\u00A9'}2020 Bit2Bit v-1.0{' '}
       </Text>
+      {spinner && (
+        <View style={styles.spinnerTextStyle}>
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
     </View>
   );
 };
@@ -172,6 +214,18 @@ const styles = StyleSheet.create({
   valText: {
     color: '#FF0000',
     fontSize: 15,
+  },
+  spinnerTextStyle: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.5,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default LoginScreen;
