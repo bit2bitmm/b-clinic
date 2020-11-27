@@ -16,7 +16,7 @@ const PatientsScreen = ({navigation}) => {
   const [data, setData] = useState({
     patients: [],
   });
-  const [visible, setVisiable] = React.useState(false);
+
   const [items, setItems] = React.useState([]);
   useEffect(() => {
     fetchData();
@@ -56,8 +56,7 @@ const PatientsScreen = ({navigation}) => {
       <TouchableOpacity
         style={{margin: 5}}
         onPress={() => {
-          setVisiable(true);
-          setItems(item);
+          navigation.navigate('PatientPanel1');
         }}>
         <Card.Content style={{paddingBottom: 5}}>
           <Paragraph>{'Id  \t\t\t\t\t\t\t:   ' + item.id}</Paragraph>

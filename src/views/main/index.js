@@ -9,6 +9,10 @@ import PatientsScreen from '../patients/PatientsScreen';
 import PatientsRegisterScreen from '../patients/PatientsRegisterScreen';
 import PharmacyRegisterScreen from '../pharmacy/PharmacyRegistrationScreen';
 import PatientsUpdateScreen from '../patients/PatientsUpdateScreen';
+import PatientPanel1 from '../patients/PatientPanel1';
+import PatientPanel2 from '../patients/PatientPanel2';
+import PatientPanel3 from '../patients/PatientPanel3';
+import {CurrentRenderContext} from '@react-navigation/native';
 const Stack = createStackNavigator();
 const NavigationDrawerStructure = (props) => {
   const toggleDrawer = () => {
@@ -32,12 +36,17 @@ const NavigationDrawerStructure = (props) => {
     </View>
   );
 };
-
+const forFade = ({current}) => ({
+  cardStyle: {
+    opacity: CurrentRenderContext.displayName,
+  },
+});
 function App({navigation}) {
   return (
     <Stack.Navigator
       initialRouteName="Home"
       screenOptions={{
+        cardStyleInterpolator: forFade,
         headerLeft: () => (
           <NavigationDrawerStructure navigationProps={navigation} />
         ),
@@ -114,6 +123,33 @@ function App({navigation}) {
         component={PatientsUpdateScreen}
         options={{
           headerTitle: 'Update Patient',
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="PatientPanel1"
+        component={PatientPanel1}
+        options={{
+          headerTitle: 'Patient Panel 1',
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="PatientPanel2"
+        component={PatientPanel2}
+        options={{
+          headerTitle: 'Patient Panel 2',
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="PatientPanel3"
+        component={PatientPanel3}
+        options={{
+          headerTitle: 'Patient Panel 3',
           headerTitleAlign: 'center',
           headerShown: true,
         }}
