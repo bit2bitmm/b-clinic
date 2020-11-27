@@ -11,7 +11,7 @@ import {
 import patientsAsync from '../../api/PatientsAsync';
 import {Button, Card, Title, Divider, Paragraph} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import {AuthContext} from '../../components/Context';
 const PatientsScreen = ({navigation}) => {
   const [data, setData] = useState({
     patients: [],
@@ -21,6 +21,7 @@ const PatientsScreen = ({navigation}) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const {signOut} = React.useContext(AuthContext);
   function fetchData() {
     patientsAsync.Patients().then(async (resp) => {
       const result = resp;
@@ -29,6 +30,15 @@ const PatientsScreen = ({navigation}) => {
           ...data,
           patients: result.data,
         });
+      } else if (result.messageCode == '0') {
+        Alert.alert('', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              signOut();
+            },
+          },
+        ]);
       }
     });
   }

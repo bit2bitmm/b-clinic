@@ -20,10 +20,13 @@ class HomeAsync extends Component {
       //   options.body.append(key, params[key]);
       // }
       const response = await fetch(Global.url + '/Dashboard/index', options);
-
       return response.json();
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again',
+      };
     }
   }
 }

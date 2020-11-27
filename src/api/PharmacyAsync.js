@@ -23,7 +23,11 @@ class PharmacyAsync extends Component {
 
       return response.json();
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again',
+      };
     }
   }
   async RegisterMed(params) {
@@ -42,7 +46,11 @@ class PharmacyAsync extends Component {
       const response = await fetch(Global.url + '/Pharmacy/create', options);
       return response.json();
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again',
+      };
     }
   }
   async DeleteMed(params) {
@@ -61,7 +69,11 @@ class PharmacyAsync extends Component {
       const response = await fetch(Global.url + '/Pharmacy/delete', options);
       return response.json();
     } catch (error) {
-      Alert.alert(JSON.stringify(error));
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again',
+      };
     }
   }
 }

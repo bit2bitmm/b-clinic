@@ -15,7 +15,7 @@ import homeAsync from '../../api/HomeAsync';
 import {Button, Card, Title} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
-
+import {AuthContext} from '../../components/Context';
 const HomeScreen = ({navigation}) => {
   const [data, setData] = useState({
     total_users: 0,
@@ -26,7 +26,7 @@ const HomeScreen = ({navigation}) => {
     chart_data: [],
     refreshing: false,
   });
-
+  const {signOut} = React.useContext(AuthContext);
   useEffect(() => {
     fetchData();
   }, []);
@@ -34,6 +34,7 @@ const HomeScreen = ({navigation}) => {
   function fetchData() {
     homeAsync.Home().then(async (resp) => {
       const result = resp;
+
       if (result.messageCode == '1') {
         setData({
           ...data,
@@ -44,6 +45,15 @@ const HomeScreen = ({navigation}) => {
           patient: result.data.patient,
           chart_data: result.data.chart_data,
         });
+      } else if (result.messageCode == '0') {
+        Alert.alert('', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              signOut();
+            },
+          },
+        ]);
       }
     });
   }

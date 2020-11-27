@@ -71,33 +71,34 @@ const PatientsUpdateScreen = ({route, navigation}) => {
       addressStatus = false;
     }
     if (namestatus && addressStatus) {
-      //   patientAsync
-      //     .RegisterPatient({
-      //       name: data.name,
-      //       gender: data.gender,
-      //       year: data.year,
-      //       month: data.month,
-      //       day: data.day,
-      //       address: data.address,
-      //     })
-      //     .then(async (resp) => {
-      //       const result = resp;
-      //       if (result.messageCode == '1') {
-      //         Alert.alert('Update Successfully!', '', [
-      //           {
-      //             text: 'Ok',
-      //             onPress: () => {
-      //               navigation.reset({
-      //                 index: 0,
-      //                 routes: [{name: 'Patients'}],
-      //               });
-      //             },
-      //           },
-      //         ]);
-      //       } else {
-      //         Alert.alert('Update falied. Try again!');
-      //       }
-      //     });
+      patientAsync
+        .UpdatePatient({
+          id: data.id,
+          name: data.name,
+          gender: data.gender,
+          year: data.year,
+          month: data.month,
+          day: data.day,
+          address: data.address,
+        })
+        .then(async (resp) => {
+          const result = resp;
+          if (result.messageCode == '1') {
+            Alert.alert('Update Successfully!', '', [
+              {
+                text: 'Ok',
+                onPress: () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Patients'}],
+                  });
+                },
+              },
+            ]);
+          } else {
+            Alert.alert('Update falied. Try again!');
+          }
+        });
     }
     setVal({
       nameReq: namereq,
@@ -138,13 +139,13 @@ const PatientsUpdateScreen = ({route, navigation}) => {
           <RadioButton
             value={1}
             status={data.gender === '1' ? 'checked' : 'unchecked'}
-            onPress={() => setData({...data, gender: 1})}
+            onPress={() => setData({...data, gender: '1'})}
           />
           <Text style={{marginTop: 7, marginRight: 10}}>Male</Text>
           <RadioButton
             value={2}
-            status={data.gender !== '1' ? 'checked' : 'unchecked'}
-            onPress={() => setData({...data, gender: 2})}
+            status={data.gender === '2' ? 'checked' : 'unchecked'}
+            onPress={() => setData({...data, gender: '2'})}
           />
           <Text style={{marginTop: 7}}>Female</Text>
         </View>

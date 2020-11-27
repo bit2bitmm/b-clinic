@@ -11,7 +11,7 @@ import {
 import pharmacyAsync from '../../api/PharmacyAsync';
 import {Button, Card, Title, Divider, Paragraph} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import {AuthContext} from '../../components/Context';
 const PharmacyScreen = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [visible, setVisiable] = React.useState(false);
@@ -19,11 +19,21 @@ const PharmacyScreen = ({navigation}) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const {signOut} = React.useContext(AuthContext);
   function fetchData() {
     pharmacyAsync.Pharmacy().then(async (resp) => {
       const result = resp;
       if (result.messageCode == '1') {
         setProductList(result.data.allproduct);
+      } else if (result.messageCode == '0') {
+        Alert.alert('', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              signOut();
+            },
+          },
+        ]);
       }
     });
   }
@@ -33,6 +43,15 @@ const PharmacyScreen = ({navigation}) => {
       if (result.messageCode == '1') {
         setProductList(null);
         fetchData();
+      } else if (result.messageCode == '0') {
+        Alert.alert('', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              signOut();
+            },
+          },
+        ]);
       }
     });
   };
