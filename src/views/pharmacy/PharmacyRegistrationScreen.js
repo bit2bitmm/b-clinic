@@ -397,6 +397,7 @@ const styles = StyleSheet.create({
     borderColor: '#808080',
     borderWidth: 1,
     flexWrap: 'wrap',
+    textAlignVertical: 'top',
   },
   datebox: {
     backgroundColor: '#ffffff',

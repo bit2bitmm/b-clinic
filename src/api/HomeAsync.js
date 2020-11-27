@@ -25,7 +25,7 @@ class HomeAsync extends Component {
       return {
         data: 'null',
         messageCode: '0',
-        message: 'Session Time out .Please Login again',
+        message: 'Session Time out .Please Login again.',
       };
     }
   }

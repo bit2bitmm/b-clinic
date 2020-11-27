@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     borderColor: '#808080',
     borderWidth: 1,
     flexWrap: 'wrap',
+    textAlignVertical: 'top',
   },
   button: {
     height: 48,
