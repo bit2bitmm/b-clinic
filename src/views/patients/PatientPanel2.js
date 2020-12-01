@@ -4,11 +4,17 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Button} from 'react-native-paper';
 
 import patientAsync from '../../api/PatientsAsync';
-const PatientPanel2 = ({navigation}) => {
-  const [data, setData] = useState();
-  useEffect(() => {}, []);
+const PatientPanel2 = ({route, navigation}) => {
+  const [data, setData] = useState({
+    patientdata: [],
+  });
+  useEffect(() => {
+    const {params} = route;
+    setData({patientdata: params.patientData});
+  }, []);
   const next = () => {
-    navigation.navigate('PatientPanel3');
+    const patientData = data.patientdata;
+    navigation.navigate('PatientPanel3', {patientData});
   };
   const back = () => {
     navigation.goBack();
@@ -22,13 +28,27 @@ const PatientPanel2 = ({navigation}) => {
           marginTop: 10,
           borderRadius: 5,
         }}>
-        <View style={{padding: 10, flexDirection: 'row'}}>
+        <View style={{padding: 10, flexDirection: 'row', flexWrap: 'wrap'}}>
+          <Text style={{fontWeight: 'bold'}}> Id : </Text>
+          <Text style={{marginRight: 20}}>{data.patientdata.id} </Text>
           <Text style={{fontWeight: 'bold'}}> Name :</Text>
-          <Text style={{marginRight: 20}}> Krishndfdsfafsdfdsa </Text>
-          <Text style={{fontWeight: 'bold'}}> Gender :</Text>
-          <Text style={{marginRight: 25}}> Male</Text>
-          <Text style={{fontWeight: 'bold'}}> Age :</Text>
-          <Text> 39yr 11mo 12d </Text>
+          <Text style={{marginRight: 20}}> {data.patientdata.name} </Text>
+          <Text style={{fontWeight: 'bold'}}> Gender : </Text>
+          <Text style={{marginRight: 25}}>
+            {data.patientdata.gender === '1' ? 'Male' : 'Female'}
+          </Text>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 10,
+            paddingBottom: 15,
+            flexDirection: 'row',
+          }}>
+          <Text style={{fontWeight: 'bold'}}> Age : </Text>
+          <Text>
+            {data.patientdata.year}yr {data.patientdata.month}mo{' '}
+            {data.patientdata.day}d
+          </Text>
         </View>
         <View
           style={{
@@ -37,33 +57,32 @@ const PatientPanel2 = ({navigation}) => {
             flexDirection: 'row',
           }}>
           <Text style={{fontWeight: 'bold'}}> Address :</Text>
-          <Text> Panpi</Text>
+          <Text> {data.patientdata.address}</Text>
         </View>
       </View>
       <ScrollView
         style={{marginHorizontal: 20, marginVertical: 20}}
         showsVerticalScrollIndicator={false}>
         <View style={{flexDirection: 'row'}}>
-          <Text style={{fontWeight: 'bold'}}>BP:</Text>
-          <Text style={{fontWeight: 'bold', marginLeft: 168}}>PR:</Text>
-          <Text style={{fontWeight: 'bold', marginLeft: 97}}>TEMP (℉):</Text>
-          <Text style={{fontWeight: 'bold', marginLeft: 45}}>SPO2:</Text>
+          <Text style={{fontWeight: 'bold', marginLeft: 10}}>BP:</Text>
+          <Text style={{fontWeight: 'bold', marginLeft: '36%'}}>PR:</Text>
+          <Text style={{fontWeight: 'bold', marginLeft: '12%'}}>TEMP(℉):</Text>
+          <Text style={{fontWeight: 'bold', marginLeft: '5%'}}>SPO2:</Text>
         </View>
         <View style={{flexDirection: 'row'}}>
           <TextInput
-            style={styles.BPinputBox}
+            style={styles.inputBox}
             returnKeyType="next"
             blurOnSubmit={false}
             onChangeText={(name) => {}}
           />
-          <Text style={{margin: 8, fontWeight: 'bold'}}>/</Text>
+          <Text style={{marginTop: 8, fontWeight: 'bold'}}>/</Text>
           <TextInput
-            style={styles.BPinputBox}
+            style={styles.inputBox}
             returnKeyType="next"
             blurOnSubmit={false}
             onChangeText={(name) => {}}
           />
-
           <TextInput
             style={styles.inputBox}
             returnKeyType="next"
@@ -106,27 +125,16 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
   },
-  inputBox: {
-    width: 70,
-    height: 38,
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    color: '#000000',
-    marginBottom: 20,
-    marginVertical: 2,
-    marginHorizontal: 24,
-    borderColor: '#808080',
-    borderWidth: 1,
-  },
-  BPinputBox: {
-    width: 70,
-    height: 38,
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    color: '#000000',
-    marginBottom: 20,
-    marginVertical: 2,
 
+  inputBox: {
+    width: '15.5%',
+    height: 38,
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+    color: '#000000',
+    margin: 8,
+    marginBottom: 20,
+    marginVertical: 2,
     borderColor: '#808080',
     borderWidth: 1,
   },
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 25,
     position: 'absolute',
-    bottom: 30,
+    bottom: 20,
     right: 20,
   },
   backbutton: {
@@ -145,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 25,
     position: 'absolute',
-    bottom: 30,
+    bottom: 20,
     left: 20,
   },
 });

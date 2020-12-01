@@ -25,7 +25,7 @@ const PatientsUpdateScreen = ({route, navigation}) => {
 
   useEffect(() => {
     const {params} = route;
-    console.log(params.item.year);
+
     LogBox.ignoreAllLogs(true);
     var years = [];
     var months = [];

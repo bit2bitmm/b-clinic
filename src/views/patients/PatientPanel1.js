@@ -4,11 +4,17 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {Button} from 'react-native-paper';
 
 import patientAsync from '../../api/PatientsAsync';
-const PatientPanel1 = ({navigation}) => {
-  const [data, setData] = useState();
-  useEffect(() => {}, []);
+const PatientPanel1 = ({route, navigation}) => {
+  const [data, setData] = useState({
+    patientdata: [],
+  });
+  useEffect(() => {
+    const {params} = route;
+    setData({patientdata: params.item});
+  }, []);
   const next = () => {
-    navigation.navigate('PatientPanel2');
+    const patientData = data.patientdata;
+    navigation.navigate('PatientPanel2', {patientData});
   };
   const back = () => {
     navigation.goBack();
@@ -22,13 +28,27 @@ const PatientPanel1 = ({navigation}) => {
           marginTop: 10,
           borderRadius: 5,
         }}>
-        <View style={{padding: 10, flexDirection: 'row'}}>
+        <View style={{padding: 10, flexDirection: 'row', flexWrap: 'wrap'}}>
+          <Text style={{fontWeight: 'bold'}}> Id : </Text>
+          <Text style={{marginRight: 20}}>{data.patientdata.id} </Text>
           <Text style={{fontWeight: 'bold'}}> Name :</Text>
-          <Text style={{marginRight: 20}}> Krishndfdsfafsdfdsa </Text>
-          <Text style={{fontWeight: 'bold'}}> Gender :</Text>
-          <Text style={{marginRight: 25}}> Male</Text>
-          <Text style={{fontWeight: 'bold'}}> Age :</Text>
-          <Text> 39yr 11mo 12d </Text>
+          <Text style={{marginRight: 20}}> {data.patientdata.name} </Text>
+          <Text style={{fontWeight: 'bold'}}> Gender : </Text>
+          <Text style={{marginRight: 25}}>
+            {data.patientdata.gender === '1' ? 'Male' : 'Female'}
+          </Text>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 10,
+            paddingBottom: 15,
+            flexDirection: 'row',
+          }}>
+          <Text style={{fontWeight: 'bold'}}> Age : </Text>
+          <Text>
+            {data.patientdata.year}yr {data.patientdata.month}mo{' '}
+            {data.patientdata.day}d
+          </Text>
         </View>
         <View
           style={{
@@ -37,7 +57,7 @@ const PatientPanel1 = ({navigation}) => {
             flexDirection: 'row',
           }}>
           <Text style={{fontWeight: 'bold'}}> Address :</Text>
-          <Text> Panpi</Text>
+          <Text> {data.patientdata.address}</Text>
         </View>
       </View>
       <ScrollView
@@ -110,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 25,
     position: 'absolute',
-    bottom: 30,
+    bottom: 20,
     right: 20,
   },
   backbutton: {
@@ -119,7 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     borderRadius: 25,
     position: 'absolute',
-    bottom: 30,
+    bottom: 20,
     left: 20,
   },
 });

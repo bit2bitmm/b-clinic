@@ -56,7 +56,7 @@ const PatientsScreen = ({navigation}) => {
       <TouchableOpacity
         style={{margin: 5}}
         onPress={() => {
-          navigation.navigate('PatientPanel1');
+          navigation.navigate('PatientPanel1', {item});
         }}>
         <Card.Content style={{paddingBottom: 5}}>
           <Paragraph>{'Id  \t\t\t\t\t\t\t:   ' + item.id}</Paragraph>
