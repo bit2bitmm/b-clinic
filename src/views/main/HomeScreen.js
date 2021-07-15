@@ -24,38 +24,49 @@ const HomeScreen = ({navigation}) => {
     total_diagnosis: [],
     patient: [],
     chart_data: [],
-    refreshing: false,
   });
+  const [refreshing, setRefreshing] = useState(true);
   const {signOut} = React.useContext(AuthContext);
   useEffect(() => {
     fetchData();
   }, []);
 
-  function fetchData() {
-    homeAsync.Home().then(async (resp) => {
-      const result = resp;
-
-      if (result.messageCode == '1') {
-        setData({
-          ...data,
-          total_users: result.data.total_users,
-          total_medicines: result.data.total_medicines,
-          total_todaypatients: result.data.total_todaypatients,
-          total_diagnosis: result.data.total_diagnosis,
-          patient: result.data.patient,
-          chart_data: result.data.chart_data,
-        });
-      } else if (result.messageCode == '0') {
-        Alert.alert('', result.message, [
-          {
-            text: 'OK',
-            onPress: () => {
-              signOut();
+  async function fetchData() {
+    try {
+      await homeAsync.Home().then(async (resp) => {
+        const result = resp;
+        if (result.messageCode == '1') {
+          setData({
+            ...data,
+            total_users: result.data.total_users,
+            total_medicines: result.data.total_medicines,
+            total_todaypatients: result.data.total_todaypatients,
+            total_diagnosis: result.data.total_diagnosis,
+            patient: result.data.patient,
+            chart_data: result.data.chart_data,
+          });
+        } else if (result.messageCode == '0') {
+          Alert.alert('', result.message, [
+            {
+              text: 'OK',
+              onPress: () => {
+                signOut();
+              },
             },
+          ]);
+        }
+      });
+      setRefreshing(false);
+    } catch {
+      Alert.alert('', 'User Session time out. Please login again.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            signOut();
           },
-        ]);
-      }
-    });
+        },
+      ]);
+    }
   }
 
   return (
@@ -70,7 +81,7 @@ const HomeScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
-            refreshing={data.refreshing}
+            refreshing={refreshing}
             onRefresh={() => {
               fetchData();
             }}

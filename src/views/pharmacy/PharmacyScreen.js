@@ -87,7 +87,9 @@ const PharmacyScreen = ({navigation}) => {
       <Card.Actions style={{alignSelf: 'flex-end'}}>
         <TouchableOpacity
           style={{flexDirection: 'row', marginHorizontal: 5}}
-          mode="contained">
+          mode="contained"
+          onPress={() => navigation.navigate('UpdatePharmacy', {item})}
+          >
           <Icon name="brush" size={20} color="black" />
           <Text style={{marginHorizontal: 5}}>Edit</Text>
         </TouchableOpacity>

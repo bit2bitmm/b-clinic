@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}) => {
   const [passReq, setPassReq] = useState('');
   const {signIn} = React.useContext(AuthContext);
   const [spinner, setSpinner] = useState(false);
-
+  const passwordRefer = useRef();
   useEffect(() => {
     CheckBioMetric();
   }, []);
@@ -137,6 +137,7 @@ const LoginScreen = ({navigation}) => {
         <Text style={styles.valText}> {emailreq}</Text>
         <TextInput
           theme={{roundness: 5}}
+          ref={passwordRefer}
           onChangeText={(password) => passChange(password)}
           style={styles.inputBox}
           mode={'outlined'}

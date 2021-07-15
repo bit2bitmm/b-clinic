@@ -8,6 +8,7 @@ import PharmacyScreen from '../pharmacy/PharmacyScreen';
 import PatientsScreen from '../patients/PatientsScreen';
 import PatientsRegisterScreen from '../patients/PatientsRegisterScreen';
 import PharmacyRegisterScreen from '../pharmacy/PharmacyRegistrationScreen';
+import PharmacyUpdateScreen from '../pharmacy/PharmacyUpdateScreen';
 import PatientsUpdateScreen from '../patients/PatientsUpdateScreen';
 import PatientPanel1 from '../patients/PatientPanel1';
 import PatientPanel2 from '../patients/PatientPanel2';
@@ -159,6 +160,15 @@ function App({navigation}) {
         component={PharmacyRegisterScreen}
         options={{
           headerTitle: 'New Medicine',
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="UpdatePharmacy"
+        component={PharmacyUpdateScreen}
+        options={{
+          headerTitle: 'Update Medicine',
           headerTitleAlign: 'center',
           headerShown: true,
         }}
