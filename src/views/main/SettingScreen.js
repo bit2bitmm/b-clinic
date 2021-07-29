@@ -1,9 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, Switch} from 'react-native-paper';
 import ReactNativeBiometrics from 'react-native-biometrics';
 import AsyncStorage from '@react-native-community/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {AuthContext} from '../../components/Context';
 const SettingScreen = ({}) => {
+  const {signOut} = React.useContext(AuthContext);
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   useEffect(() => {
     fetchData();
@@ -66,6 +69,16 @@ const SettingScreen = ({}) => {
           </Card.Content>
         </Card>
       </View>
+
+      <TouchableOpacity
+        onPress={() => signOut()}
+        style={{
+          position: 'absolute',
+          bottom: 5,
+          right: 25,
+        }}>
+        <Icon name="log-out" size={40} color="#000000" />
+      </TouchableOpacity>
     </View>
   );
 };

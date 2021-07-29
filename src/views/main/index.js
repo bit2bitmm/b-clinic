@@ -14,7 +14,9 @@ import PatientPanel1 from '../patients/PatientPanel1';
 import PatientPanel2 from '../patients/PatientPanel2';
 import PatientPanel3 from '../patients/PatientPanel3';
 import {CurrentRenderContext} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 const NavigationDrawerStructure = (props) => {
   const toggleDrawer = () => {
     props.navigationProps.toggleDrawer();
@@ -44,56 +46,89 @@ const forFade = ({current}) => ({
 });
 function App({navigation}) {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        cardStyleInterpolator: forFade,
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerRight: () => (
-          <View style={{flexDirection: 'row'}}>
-            <Icon
-              style={{marginHorizontal: 7}}
-              name="person-add"
-              size={30}
-              color="black"
-              onPress={() => navigation.navigate('AddPatients')}
-            />
-            <Icon
-              style={{marginHorizontal: 10}}
-              name="medkit"
-              size={30}
-              color="black"
-              onPress={() => navigation.navigate('AddPharmacy')}
-            />
-          </View>
-        ),
-        headerStyle: {
-          backgroundColor: '#fff', //Set Header color
-        },
-        headerTintColor: '#000', //Set Header text color
-        headerTitleStyle: {
-          fontWeight: 'bold', //Set Header text style
-        },
-      }}>
+    <Tab.Navigator initialRouteName="Home" swipeEnabled={true}>
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color}) => <Icon name="home" color={color} size={26} />,
+        }}
+      />
+      <Tab.Screen
+        name="Pharmacy"
+        component={PharmacyStack}
+        options={{
+          tabBarLabel: 'Pharmacy',
+          tabBarIcon: ({color}) => (
+            <Icon name="medkit" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Patients"
+        component={PatientStack}
+        options={{
+          tabBarLabel: 'Patients',
+          tabBarIcon: ({color}) => (
+            <Icon name="person-add" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={SettingStack}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({color}) => (
+            <Icon name="settings-sharp" color={color} size={26} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+function HomeStack() {
+  return (
+    <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: 'Dashboard',
           headerTitleAlign: 'center',
           headerShown: true,
         }}
       />
+    </Stack.Navigator>
+  );
+}
+function PatientStack() {
+  return (
+    <Stack.Navigator>
       <Stack.Screen
-        name="Setting"
-        component={SettingScreen}
+        name="Patient"
+        component={PatientsScreen}
         options={{
           headerTitleAlign: 'center',
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name="UpdatePatient"
+        component={PatientsUpdateScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function PharmacyStack() {
+  return (
+    <Stack.Navigator>
       <Stack.Screen
         name="Pharmacy"
         component={PharmacyScreen}
@@ -103,72 +138,9 @@ function App({navigation}) {
         }}
       />
       <Stack.Screen
-        name="Patients"
-        component={PatientsScreen}
-        options={{
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="AddPatients"
-        component={PatientsRegisterScreen}
-        options={{
-          headerTitle: 'New Patient',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="UpdatePatient"
-        component={PatientsUpdateScreen}
-        options={{
-          headerTitle: 'Update Patient',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="PatientPanel1"
-        component={PatientPanel1}
-        options={{
-          headerTitle: 'Patient Panel 1',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="PatientPanel2"
-        component={PatientPanel2}
-        options={{
-          headerTitle: 'Patient Panel 2',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="PatientPanel3"
-        component={PatientPanel3}
-        options={{
-          headerTitle: 'Patient Panel 3',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="AddPharmacy"
-        component={PharmacyRegisterScreen}
-        options={{
-          headerTitle: 'New Medicine',
-          headerTitleAlign: 'center',
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
         name="UpdatePharmacy"
         component={PharmacyUpdateScreen}
         options={{
-          headerTitle: 'Update Medicine',
           headerTitleAlign: 'center',
           headerShown: true,
         }}
@@ -176,5 +148,18 @@ function App({navigation}) {
     </Stack.Navigator>
   );
 }
-
+function SettingStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
 export default App;
