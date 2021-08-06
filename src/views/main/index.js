@@ -122,6 +122,30 @@ function PatientStack() {
           headerShown: true,
         }}
       />
+      <Stack.Screen
+        name="PatientPanel1"
+        component={PatientPanel1}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="PatientPanel2"
+        component={PatientPanel2}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="PatientPanel3"
+        component={PatientPanel3}
+        options={{
+          headerTitleAlign: 'center',
+          headerShown: true,
+        }}
+      />
     </Stack.Navigator>
   );
 }
