@@ -1,17 +1,130 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, TextInput, StyleSheet, Alert, LogBox} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  LogBox,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {Button} from 'react-native-paper';
-
+import {Button, Card, Paragraph} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
 import patientAsync from '../../api/PatientsAsync';
 const PatientPanel1 = ({route, navigation}) => {
   const [data, setData] = useState({
     patientdata: [],
   });
+  const [complaints, setComplaints] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [invest, setInvest] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
+    LogBox.ignoreAllLogs(true);
     const {params} = route;
     setData({patientdata: params.item});
+    fetchData(params.item.id);
   }, []);
+  function fetchData(id) {
+    patientAsync.Panel({id: id}).then(async (resp) => {
+      const result = resp;
+      if (result.messageCode == '1') {
+        setComplaints(result.data.complaint);
+        setHistory(result.data.history);
+        setInvest(result.data.investigation);
+        setRefreshing(false);
+      } else if (result.messageCode == '0') {
+        Alert.alert('', result.message, [
+          {
+            text: 'OK',
+            onPress: () => {
+              signOut();
+            },
+          },
+        ]);
+      }
+    });
+  }
+  const renderCompainItem = ({item}) => (
+    <Card
+      style={{
+        marginBottom: 10,
+        backgroundColor: '#f5F5F5',
+      }}>
+      <Card.Title
+        title={item.complaint}
+        subtitle={item.created_date}
+        titleStyle={{
+          fontSize: 16,
+        }}
+      />
+      <Icon
+        name="trash-sharp"
+        size={20}
+        style={{
+          marginRight: 10,
+          color: '#e30f00',
+          position: 'absolute',
+          right: 0,
+          top: 25,
+        }}
+      />
+    </Card>
+  );
+  const renderHistoryItem = ({item}) => (
+    <Card
+      style={{
+        marginBottom: 10,
+        backgroundColor: '#f5F5F5',
+      }}>
+      <Card.Title
+        title={item.history}
+        subtitle={item.created_date}
+        titleStyle={{
+          fontSize: 16,
+        }}
+      />
+      <Icon
+        name="trash-sharp"
+        size={20}
+        style={{
+          marginRight: 10,
+          color: '#e30f00',
+          position: 'absolute',
+          right: 0,
+          top: 25,
+        }}
+      />
+    </Card>
+  );
+  const renderInsvestItem = ({item}) => (
+    <Card
+      style={{
+        marginBottom: 10,
+        backgroundColor: '#f5F5F5',
+      }}>
+      <Card.Title
+        title={item.investigation}
+        subtitle={item.created_date}
+        titleStyle={{
+          fontSize: 16,
+        }}
+      />
+      <Icon
+        name="trash-sharp"
+        size={20}
+        style={{
+          marginRight: 10,
+          color: '#e30f00',
+          position: 'absolute',
+          right: 0,
+          top: 25,
+        }}
+      />
+    </Card>
+  );
   const next = () => {
     const patientData = data.patientdata;
     navigation.navigate('PatientPanel2', {patientData});
@@ -61,7 +174,12 @@ const PatientPanel1 = ({route, navigation}) => {
         </View>
       </View>
       <ScrollView
-        style={{marginHorizontal: 20, marginVertical: 10}}
+        bounces={false}
+        nestedScrollEnabled={true}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => {}} />
+        }
+        style={{flex: 1, marginHorizontal: 20, marginVertical: 10}}
         showsVerticalScrollIndicator={false}>
         <Text style={styles.header}>Complaints:</Text>
         <TextInput
@@ -71,6 +189,11 @@ const PatientPanel1 = ({route, navigation}) => {
           blurOnSubmit={false}
           onChangeText={(address) => {}}
         />
+        <FlatList
+          data={complaints}
+          renderItem={renderCompainItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
         <Text style={styles.header}>History:</Text>
         <TextInput
           multiline={true}
@@ -78,6 +201,11 @@ const PatientPanel1 = ({route, navigation}) => {
           returnKeyType="next"
           blurOnSubmit={false}
           onChangeText={(address) => {}}
+        />
+        <FlatList
+          data={history}
+          renderItem={renderHistoryItem}
+          keyExtractor={(item, index) => index.toString()}
         />
         <Text style={styles.header}>Investigation:</Text>
         <TextInput
@@ -87,7 +215,11 @@ const PatientPanel1 = ({route, navigation}) => {
           blurOnSubmit={false}
           onChangeText={(address) => {}}
         />
-
+        <FlatList
+          data={invest}
+          renderItem={renderInsvestItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
         <View style={{marginBottom: 50}}></View>
       </ScrollView>
       <Button
@@ -117,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 5,
     color: '#000000',
-    marginBottom: 20,
+    marginBottom: 10,
     marginVertical: 2,
     borderColor: '#808080',
     borderWidth: 1,

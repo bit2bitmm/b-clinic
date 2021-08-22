@@ -15,10 +15,6 @@ class PatientsAsync extends Component {
         },
         method: 'POST',
       };
-      // options.body = new FormData();
-      // for (let key in params) {
-      //   options.body.append(key, params[key]);
-      // }
       const response = await fetch(
         Global.url + '/Patients/fetchPatientData',
         options,
@@ -96,6 +92,30 @@ class PatientsAsync extends Component {
         options.body.append(key, params[key]);
       }
       const response = await fetch(Global.url + '/Patients/delete', options);
+
+      return response.json();
+    } catch (error) {
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again.',
+      };
+    }
+  }
+
+  async Panel(param) {
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Accept: 'application/json',
+        },
+        method: 'POST',
+      };
+      const response = await fetch(
+        Global.url + '/Patients/panel/' + param.id,
+        options,
+      );
 
       return response.json();
     } catch (error) {

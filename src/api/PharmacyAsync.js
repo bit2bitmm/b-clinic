@@ -53,6 +53,32 @@ class PharmacyAsync extends Component {
       };
     }
   }
+  async UpdateMed(params) {
+    try {
+      let options = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Accept: 'application/json',
+        },
+        method: 'POST',
+      };
+      options.body = new FormData();
+      for (let key in params) {
+        options.body.append(key, params[key]);
+      }
+      const response = await fetch(
+        Global.url + '/Pharmacy/update/' + params.id,
+        options,
+      );
+      return response.json();
+    } catch (error) {
+      return {
+        data: 'null',
+        messageCode: '0',
+        message: 'Session Time out .Please Login again.',
+      };
+    }
+  }
   async DeleteMed(params) {
     try {
       let options = {

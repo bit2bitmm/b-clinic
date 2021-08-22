@@ -68,6 +68,7 @@ const PatientsUpdateScreen = ({navigation, route}) => {
       description: params.item.description,
       used_quantity: params.item.used_quantity,
       remain_quantity: params.item.remain_quantity,
+      org_reman_qty: params.item.remain_quantity,
       remain_tab_quantity: params.item.remain_tab_quantity,
     });
   };
@@ -122,66 +123,40 @@ const PatientsUpdateScreen = ({navigation, route}) => {
       sellingpricestatus = false;
     }
     if (namestatus && qtystatus && actualpricestatus && sellingpricestatus) {
-      var remain_quantity = data.qty;
-      var remain_tab_quantity =
-        parseInt(data.qty) *
-        parseInt(data.tab_quantity == '' ? '0' : data.tab_quantity);
-      var register_date = Moment(data.regdate).format('yyyy-MM-DD');
-      var expire_date = Moment(data.expdate).format('yyyy-MM-DD');
-      var description = data.description;
-      var sell_type = data.type;
-      var actual_price = data.actual_price;
-      var selling_price = data.selling_price;
-      var profit_price = data.profit;
-      var status = data.status;
+      var register_date = Moment(data.register_date).format('yyyy-MM-DD');
+      var expire_date = Moment(data.expire_date).format('yyyy-MM-DD');
 
       pharmacyAsync
-        .RegisterMed({
+        .UpdateMed({
+          id: data.id,
           medicine_name: data.medicine_name,
           quantity: data.quantity,
           tab_quantity: data.tab_quantity,
-          remain_quantity: remain_quantity,
-          remain_tab_quantity: remain_tab_quantity,
+          remain_quantity: data.remain_quantity,
           register_date: register_date,
           expire_date: expire_date,
-          description: description,
-          sell_type: sell_type,
-          actual_price: actual_price,
-          selling_price: selling_price,
-          profit_price: profit_price,
-          status: status,
+          description: data.description,
+          sell_type: data.sell_type,
+          actual_price: data.actual_price,
+          selling_price: data.selling_price,
+          profit_price: data.profit_price,
+          status: data.status,
           is_deleted: 0,
         })
         .then(async (resp) => {
           const result = resp;
           if (result.messageCode == '1') {
-            Alert.alert(
-              'Registered Successfully!',
-              'Do you want to register another medicine?',
-              [
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 0,
-                        routes: [
-                          {
-                            name: 'AddPharmacy',
-                          },
-                        ],
-                      }),
-                    );
-                  },
+            Alert.alert('', 'Update Successfully!', [
+              {
+                text: 'Ok',
+                onPress: async () => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Pharmacy'}],
+                  });
                 },
-                {
-                  text: 'No',
-                  onPress: () => {
-                    navigation.navigate('Pharmacy');
-                  },
-                },
-              ],
-            );
+              },
+            ]);
           } else {
             Alert.alert('Register falied. Try again!');
           }
@@ -240,9 +215,15 @@ const PatientsUpdateScreen = ({navigation, route}) => {
                 var quantity = parseInt(data.org_quantity);
                 var load_qty = parseInt(qty != '' ? qty : '0');
                 var reload_qty = quantity + (isNaN(load_qty) ? 0 : load_qty);
+
+                var remain_qty = parseInt(data.org_reman_qty);
+                var reload_remian_qty =
+                  remain_qty + (isNaN(load_qty) ? 0 : load_qty);
+
                 setData({
                   ...data,
                   quantity: reload_qty.toString(),
+                  remain_quantity: reload_remian_qty.toString(),
                 });
               }}
             />

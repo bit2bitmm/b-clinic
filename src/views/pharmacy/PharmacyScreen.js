@@ -16,6 +16,8 @@ const PharmacyScreen = ({navigation}) => {
   const [productList, setProductList] = useState([]);
   const [visible, setVisiable] = React.useState(false);
   const [items, setItems] = React.useState([]);
+  const [refreshing, setRefreshing] = useState(true);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -36,6 +38,7 @@ const PharmacyScreen = ({navigation}) => {
         ]);
       }
     });
+    setRefreshing(false);
   }
   const deletePharmacy = (id) => {
     pharmacyAsync.DeleteMed({product_id: id}).then(async (resp) => {
@@ -88,8 +91,7 @@ const PharmacyScreen = ({navigation}) => {
         <TouchableOpacity
           style={{flexDirection: 'row', marginHorizontal: 5}}
           mode="contained"
-          onPress={() => navigation.navigate('UpdatePharmacy', {item})}
-          >
+          onPress={() => navigation.navigate('UpdatePharmacy', {item})}>
           <Icon name="brush" size={20} color="black" />
           <Text style={{marginHorizontal: 5}}>Edit</Text>
         </TouchableOpacity>
@@ -258,6 +260,11 @@ const PharmacyScreen = ({navigation}) => {
         data={productList}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        refreshing={refreshing}
+        onRefresh={async () => {
+          setRefreshing(true);
+          await fetchData();
+        }}
       />
     </View>
   );

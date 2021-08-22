@@ -16,7 +16,7 @@ const PatientsScreen = ({navigation}) => {
   const [data, setData] = useState({
     patients: [],
   });
-
+  const [refreshing, setRefreshing] = useState(true);
   const [items, setItems] = React.useState([]);
   useEffect(() => {
     fetchData();
@@ -41,6 +41,7 @@ const PatientsScreen = ({navigation}) => {
         ]);
       }
     });
+    setRefreshing(false);
   }
   const deletePatient = (id) => {
     patientsAsync.deletePatients({patient_id: id}).then(async (resp) => {
@@ -134,6 +135,11 @@ const PatientsScreen = ({navigation}) => {
         data={data.patients}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
+        refreshing={refreshing}
+        onRefresh={async () => {
+          setRefreshing(true);
+          await fetchData();
+        }}
       />
     </View>
   );
